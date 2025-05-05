@@ -7,9 +7,21 @@ import json
 import requests
 import streamlit as st
 from PIL import ImageEnhance
+import os
+import certifi
+from dotenv import load_dotenv
+
+# Fuerza a usar certificados válidos
+os.environ['SSL_CERT_FILE'] = certifi.where()
+
+# Cargar las variables de entorno desde .env
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 
 # Configuración de la página
 st.set_page_config(page_title="AnuncioProAI", page_icon="🏠", layout="wide")
+
 
 # Idiomas disponibles y selector
 idiomas = {
@@ -495,8 +507,8 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
         """
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+        response = client.Chat.Completions.create(
+            model="gpt-4",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=1000
