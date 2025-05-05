@@ -495,13 +495,13 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
         """
-        response = openai.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
             max_tokens=1000
         )
-        return response.choices[0].message.content
+        return response.choices[0].message['content']
 
     # Botón para generar el anuncio
     st.subheader("🧠 Generador de anuncio con IA")
