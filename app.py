@@ -8,11 +8,10 @@ import requests
 import streamlit as st
 from PIL import ImageEnhance
 import os
-import certifi
 from dotenv import load_dotenv
+from openai import Client
 
-# Fuerza a usar certificados válidos
-os.environ['SSL_CERT_FILE'] = certifi.where()
+
 
 # Cargar las variables de entorno desde .env
 load_dotenv()
