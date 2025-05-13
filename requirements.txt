@@ -2,3 +2,7 @@ streamlit
 openai
 pillow
 python-dotenv
+sendgrid
+cloudinary
+requests
+zipfile36
