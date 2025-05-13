@@ -13,6 +13,7 @@ import cloudinary.uploader
 import cloudinary.api
 from openai import OpenAI
 import json
+import certifi
 import requests
 import zipfile
 import tempfile
@@ -24,6 +25,8 @@ load_dotenv()
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email
 
+# Fuerza a usar certificados válidos
+os.environ['SSL_CERT_FILE'] = certifi.where()
 
 # Configurar logging para depuración
 logging.basicConfig(level=logging.DEBUG)

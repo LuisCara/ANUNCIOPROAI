@@ -6,3 +6,4 @@ sendgrid
 cloudinary
 requests
 zipfile36
+certifi
