@@ -7,6 +7,7 @@ os.environ.pop("SSL_CERT_DIR", None)
 import streamlit as st
 import io
 import base64
+import openai
 from PIL import Image, ImageEnhance, ImageFilter
 import cloudinary
 import cloudinary.uploader
