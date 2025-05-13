@@ -36,30 +36,23 @@ logger = logging.getLogger(__name__)
 # Configurar Cloudinary
 try:
     cloudinary.config(
-        cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
-        api_key=os.getenv("CLOUDINARY_API_KEY"),
-        api_secret=os.getenv("CLOUDINARY_API_SECRET")
-    )
+    cloud_name=st.secrets["cloudinary"]["cloud_name"],
+    api_key=st.secrets["cloudinary"]["api_key"],
+    api_secret=st.secrets["cloudinary"]["api_secret"]
+)
+
 except Exception as e:
     st.error(f"Error al configurar Cloudinary: {str(e)}")
     st.stop()
 
 # Inicializa el cliente de OpenAI (solo para análisis de imágenes)
 try:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+    client  = OpenAI(api_key=st.secrets["openai"]["api_key"])
 except Exception as e:
     st.error(f"Error al inicializar el cliente de OpenAI: {str(e)}")
     st.error("Verifica que la variable de entorno OPENAI_API_KEY esté configurada correctamente y que no haya problemas con las variables SSL_CERT_FILE o SSL_CERT_DIR.")
     st.stop()
     
-# Inicializa el cliente de OpenAI (solo para análisis de imágenes)
-try:
-    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-except Exception as e:
-    st.error(f"Error al inicializar el cliente de OpenAI: {str(e)}")
-    st.error("Verifica que la variable de entorno OPENAI_API_KEY esté configurada correctamente y que no haya problemas con las variables SSL_CERT_FILE o SSL_CERT_DIR.")
-    st.stop()
-
 # Configuración de la página
 st.set_page_config(page_title="AnuncioProAI", page_icon="🏠", layout="wide")
 
@@ -844,8 +837,8 @@ elif menu == textos[lang]["nav"][2]:
 # Contacto
 
 # Cargar variables de entorno
-SENDGRID_FROM_EMAIL = os.getenv("SENDGRID_FROM_EMAIL", "luis.cara@hotmail.com")
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDGRID_FROM_EMAIL = st.secrets["sendgrid"]["from_email"]
+SENDGRID_API_KEY = st.secrets["sendgrid"]["api_key"]
 
 def send_email(nombre, correo, mensaje, to_email="luis.cara@hotmail.com"):
     if not SENDGRID_FROM_EMAIL or not SENDGRID_API_KEY:
