@@ -50,6 +50,14 @@ except Exception as e:
     st.error(f"Error al inicializar el cliente de OpenAI: {str(e)}")
     st.error("Verifica que la variable de entorno OPENAI_API_KEY esté configurada correctamente y que no haya problemas con las variables SSL_CERT_FILE o SSL_CERT_DIR.")
     st.stop()
+    
+# Inicializa el cliente de OpenAI (solo para análisis de imágenes)
+try:
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+except Exception as e:
+    st.error(f"Error al inicializar el cliente de OpenAI: {str(e)}")
+    st.error("Verifica que la variable de entorno OPENAI_API_KEY esté configurada correctamente y que no haya problemas con las variables SSL_CERT_FILE o SSL_CERT_DIR.")
+    st.stop()
 
 # Configuración de la página
 st.set_page_config(page_title="AnuncioProAI", page_icon="🏠", layout="wide")
