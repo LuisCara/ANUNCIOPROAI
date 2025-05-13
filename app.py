@@ -5,9 +5,9 @@ os.environ.pop("SSL_CERT_FILE", None)
 os.environ.pop("SSL_CERT_DIR", None)
 
 import streamlit as st
+import re
 import io
 import base64
-import openai
 from PIL import Image, ImageEnhance, ImageFilter
 import cloudinary
 import cloudinary.uploader
@@ -749,6 +749,10 @@ elif menu == textos[lang]["nav"][1]:
     )
 
     # Actualizar la función de generación de anuncio
+   
+    def strip_non_ascii(text):
+        # Elimina emojis y caracteres no ASCII      
+        return re.sub(r'[^\x00-\x7F]+', ' ', text)
     def generar_anuncio(datos):
         if st.session_state.informacion_adicional:
             datos["informacion_adicional"] += "\n" + st.session_state.informacion_adicional
@@ -771,27 +775,27 @@ elif menu == textos[lang]["nav"][1]:
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
-        📝 DATOS DISPONIBLES:
+        DATOS DISPONIBLES:
 
-        🏷 Tipo de operación: {datos['tipo_operacion']}  
-        🏡 Tipo de propiedad: {datos['tipo']}  
-        📍 Ubicación: {datos['ubicacion']}  
-        📐 Superficie: {datos['m2']} m² construidos, {datos['m2_utiles']} m² útiles, {datos['m2_terreno']} m² de terreno  
-        🛏 Habitaciones: {datos['habitaciones']} | 🛁 Baños: {datos['baños']}  
-        🌞 Fachada: {datos['fachada']} | Orientación: {datos['orientacion']}  
-        📈 Estado: {datos['estado']} | Certificado energético: {datos['certificado']}  
-        🏗 Suelo interior: {datos['suelo_interior']} | Suelo exterior: {datos['suelo_exterior']}  
-        ✨ Extras vivienda: {', '.join(datos['extras_vivienda']) if datos['extras_vivienda'] else 'Ninguno'}  
-        🏢 Extras edificio: {', '.join(datos['extras_edificio']) if datos['extras_edificio'] else 'Ninguno'}  
-        📸 Terraza: {datos['metros_terraza']} m² | Balcón: {datos['metros_balcon']} m² | Trastero: {datos['metros_trastero']} m² | Garaje: {datos['metros_garaje']} m²  
-        🗺 Servicios cercanos: {datos['descripcion_servicios']}  
-        🌊/🏞 Otros (vistas, entorno, etc.): {datos['descripcion_cercania']}  
-        💶 Precio: {datos['precio']} € | Gastos comunidad: {datos['gastos']} €  
-        ⚠ Situación (ocupado, libre, alquilado, etc.): {datos['situacion']}  
-        📝 Información adicional: {datos['informacion_adicional']}  
-        📣 Destino del anuncio: {datos['destino']}  
+        Tipo de operación: {datos['tipo_operacion']}  
+        Tipo de propiedad: {datos['tipo']}  
+        Ubicación: {datos['ubicacion']}  
+        Superficie: {datos['m2']} m² construidos, {datos['m2_utiles']} m² útiles, {datos['m2_terreno']} m² de terreno  
+        Habitaciones: {datos['habitaciones']} | 🛁 Baños: {datos['baños']}  
+        Fachada: {datos['fachada']} | Orientación: {datos['orientacion']}  
+        Estado: {datos['estado']} | Certificado energético: {datos['certificado']}  
+        Suelo interior: {datos['suelo_interior']} | Suelo exterior: {datos['suelo_exterior']}  
+        Extras vivienda: {', '.join(datos['extras_vivienda']) if datos['extras_vivienda'] else 'Ninguno'}  
+        Extras edificio: {', '.join(datos['extras_edificio']) if datos['extras_edificio'] else 'Ninguno'}  
+        Terraza: {datos['metros_terraza']} m² | Balcón: {datos['metros_balcon']} m² | Trastero: {datos['metros_trastero']} m² | Garaje: {datos['metros_garaje']} m²  
+        Servicios cercanos: {datos['descripcion_servicios']}  
+        Otros (vistas, entorno, etc.): {datos['descripcion_cercania']}  
+        Precio: {datos['precio']} € | Gastos comunidad: {datos['gastos']} €  
+        Situación (ocupado, libre, alquilado, etc.): {datos['situacion']}  
+        Información adicional: {datos['informacion_adicional']}  
+        Destino del anuncio: {datos['destino']}  
 
-        🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
+        Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
         """
 
