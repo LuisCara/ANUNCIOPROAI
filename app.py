@@ -5,6 +5,7 @@ os.environ.pop("SSL_CERT_FILE", None)
 os.environ.pop("SSL_CERT_DIR", None)
 
 import streamlit as st
+import streamlit.components.v1 as components
 import re
 import io
 import base64
@@ -803,14 +804,38 @@ elif menu == textos[lang]["nav"][1]:
 
         return response.choices[0].message.content
 
-    # Botón para generar el anuncio
-    st.subheader("🧠 Generador de anuncio con IA")
-    if st.button("✨ Generar anuncio optimizado"):
-        datos = recopilar_datos(destino)
-        anuncio = generar_anuncio(datos)
-        st.success("✅ Anuncio generado con éxito:")
-        st.markdown("📝 **Anuncio generado**")
-        st.markdown(anuncio)
+
+# Botón para generar el anuncio
+st.subheader("🧠 Generador de anuncio con IA")
+
+if st.button("✨ Generar anuncio optimizado"):
+    datos = recopilar_datos(destino)
+    anuncio = generar_anuncio(datos)
+
+    st.success("✅ Anuncio generado con éxito:")
+    st.markdown("📝 **Anuncio generado**")
+    st.markdown(anuncio)
+
+    # Botón para descargar el anuncio
+    st.download_button(
+        label="📥 Descargar anuncio",
+        data=anuncio,
+        file_name="anuncio.txt",
+        mime="text/plain"
+    )
+
+    # Botón para copiar al portapapeles
+    components.html(
+        f"""
+        <button onclick="navigator.clipboard.writeText(`{anuncio}`)"
+                style="background-color:#4CAF50;color:white;padding:10px 20px;
+                       border:none;border-radius:5px;cursor:pointer;font-size:16px;">
+            📋 Copiar al portapapeles
+        </button>
+        """,
+        height=50
+    )
+
 
 # Planes
 elif menu == textos[lang]["nav"][2]:
