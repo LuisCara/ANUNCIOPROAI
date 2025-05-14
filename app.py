@@ -809,7 +809,8 @@ elif menu == textos[lang]["nav"][1]:
         datos = recopilar_datos(destino)
         anuncio = generar_anuncio(datos)
         st.success("✅ Anuncio generado con éxito:")
-        st.text_area("📝 Anuncio generado", value=anuncio, height=300)
+        st.markdown("📝 **Anuncio generado**")
+        st.markdown(anuncio)
 
 # Planes
 elif menu == textos[lang]["nav"][2]:
