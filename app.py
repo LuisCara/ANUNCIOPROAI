@@ -459,7 +459,7 @@ elif menu == textos[lang]["nav"][1]:
             
             # Guardar imagen como JPEG en un archivo temporal
             with tempfile.NamedTemporaryFile(suffix=".jpeg", delete=False) as temp_file:
-                imagen_mejorada.save(temp_file.name, format="JPEG", quality=80)  # Reducido para optimizar tamaño
+                imagen_mejorada.save(temp_file.name, format="JPEG", quality=100)  # Reducido para optimizar tamaño
                 temp_file_path = temp_file.name
 
             # Depuración: registrar parámetros
@@ -480,9 +480,8 @@ elif menu == textos[lang]["nav"][1]:
 
             # Construir transformaciones básicas
             transformations = [
-                {"width": 256, "height": 256, "crop": "limit"},  # Reducido a la mitad para optimizar tamaño
-                {"quality": "auto:good"},  # Optimización con buena calidad
-                {"fetch_format": "webp"}  # Usar WebP para menor tamaño
+                {"quality": "auto:best"},  # Mejor calidad posible
+                {"fetch_format": "jpg"}  # Mantener formato JPEG
             ]
 
             # Generar URL con transformaciones
@@ -520,7 +519,7 @@ elif menu == textos[lang]["nav"][1]:
                 imagen_procesada = Image.open(io.BytesIO(response.content))
                 # Registrar tamaño de la imagen procesada
                 buffered = io.BytesIO()
-                imagen_procesada.save(buffered, format="WEBP", quality=80)
+                imagen_procesada.save(buffered, format="JPEG", quality=100)
                 processed_size_mb = len(buffered.getvalue()) / (1024 * 1024)
                 logger.debug(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
                 st.write(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
@@ -691,13 +690,13 @@ elif menu == textos[lang]["nav"][1]:
                         if imagen_procesada:
                             st.image(imagen_procesada, caption=f"Procesada: {uploaded_file.name}", width=256)  # Reducido para visualización
                             buffered = io.BytesIO()
-                            imagen_procesada.save(buffered, format="WEBP", quality=80)
-                            imagenes_procesadas.append((buffered.getvalue(), f"procesado_{uploaded_file.name.replace('.jpeg', '.webp').replace('.jpg', '.webp').replace('.png', '.webp')}"))
+                            imagen_procesada.save(buffered, format="JPEG", quality=100)
+                            imagenes_procesadas.append((buffered.getvalue(), f"procesado_{uploaded_file.name.replace('.jpeg', '.jpg').replace('.jpg', '.jpg').replace('.png', '.jpg')}"))
                             st.download_button(
                                 label="Descargar imagen procesada",
                                 data=buffered.getvalue(),
-                                file_name=f"procesado_{uploaded_file.name.replace('.jpeg', '.webp').replace('.jpg', '.webp').replace('.png', '.webp')}",
-                                mime="image/webp"
+                                file_name=f"procesado_{uploaded_file.name.replace('.jpeg', '.jpg').replace('.jpg', '.jpg').replace('.png', '.jpg')}",
+                                mime="image/jpeg"
                             )
 
                     if analizar_caracteristicas:
