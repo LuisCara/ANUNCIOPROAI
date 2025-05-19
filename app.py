@@ -821,7 +821,7 @@ if st.button("✨ Generar anuncio optimizado"):
     st.download_button(
         label="📥 Descargar anuncio",
         data=anuncio,
-        file_name="anuncio_inmobiliario.txt",
+        file_name="anuncio_inmobiliario.docx",
         mime="text/plain"
     )
 
