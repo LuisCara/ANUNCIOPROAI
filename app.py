@@ -743,67 +743,65 @@ elif menu == textos[lang]["nav"][1]:
 
     # Actualizar la función de generación de anuncio
    
-    def strip_non_ascii(text):
-        # Elimina emojis y caracteres no ASCII      
-        return re.sub(r'[^\x00-\x7F]+', ' ', text)
     def generar_anuncio(datos):
-        if st.session_state.informacion_adicional:
-            datos["informacion_adicional"] += "\n" + st.session_state.informacion_adicional
+        if hasattr(st.session_state, 'informacion_adicional') and st.session_state.informacion_adicional:
+            if "informacion_adicional" in datos:
+                datos["informacion_adicional"] += "\n" + st.session_state.informacion_adicional
+            else:
+                datos["informacion_adicional"] = st.session_state.informacion_adicional
 
         prompt = f"""
-        
-    Eres un experto en marketing inmobiliario internacional, especializado en crear anuncios impactantes y persuasivos para la venta o alquiler de propiedades en diversos países y plataformas digitales.
+        Eres un experto en marketing inmobiliario internacional, especializado en crear anuncios profesionales y persuasivos para la venta o alquiler de propiedades en distintos países y plataformas.
 
-    Tu objetivo es redactar un anuncio de alto valor, adaptado específicamente para:
+        Tu objetivo es generar un anuncio de alto impacto, optimizado para:
 
-    1. Portales inmobiliarios como Idealista, Fotocasa, Milanuncios, Zillow, Immowelt, SeLoger o Rightmove, con un estilo profesional, claro, optimizado para SEO y con llamadas a la acción efectivas.  
-    2. Redes sociales (Instagram, Facebook, TikTok, LinkedIn), con un tono cercano, emocional y directo, incorporando emojis donde encajen naturalmente y finalizando con hashtags relevantes geolocalizados.
+        1. **Portales inmobiliarios** como Idealista, Fotocasa, Milanuncios, Zillow, Immowelt, SeLoger, Rightmove…
+        2. **Redes sociales** como Instagram, Facebook, TikTok o LinkedIn.
 
-    El texto debe:
+        El anuncio debe:
 
-    - Ser atractivo y fluido, evitando enumeraciones mecánicas o repetitivas.  
-    - Destacar no solo las características, sino el estilo de vida, los beneficios y el valor único que ofrece la propiedad. 
-    - Adaptarse al canal de publicación, combinando información clara y profesional para portales, y un mensaje más emocional y dinámico para redes sociales.
+        - Ser atractivo, claro, natural y persuasivo.
+        - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
+        - Adaptarse al canal:
+          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras.
+          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina con hashtags relevantes según el país o ciudad.
 
-    Con la siguiente información, redacta un anuncio que convenza, seduzca e informe de manera natural y efectiva:
+        Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
-    Tipo de operación: {tipo_operacion}  
-    Tipo de propiedad: {tipo}  
-    Ubicación: {ubicacion}  
-    Superficie construida: {m2} m² ({m2_utiles} m² útiles) sobre un terreno de {m2_terreno} m²  
-    Habitaciones: {habitaciones} | Baños: {baños}  
-    Fachada: {fachada} | Orientación: {orientacion}  
-    Estado actual: {estado} | Certificado energético: {certificado}  
-    Suelo interior: {suelo_interior} | Suelo exterior: {suelo_exterior}  
-    Extras vivienda: {extras_vivienda}  
-    Extras edificio: {extras_edificio}  
-    Terraza: {metros_terraza} m² | Balcón: {metros_balcon} m² | Trastero: {metros_trastero} m² | Garaje: {metros_garaje} m²  
-    Servicios cercanos: {descripcion_servicios}  
-    Entorno y vistas: {descripcion_cercania}  
-    Precio: {precio} € | Gastos de comunidad: {gastos} €  
-    Situación actual: {situacion}  
-    Información adicional: {informacion_adicional}  
-    Destino del anuncio: {destino}
+        📝 DATOS DISPONIBLES:
 
-    Ten presente el público y canal destino para ajustar el tono y estructura:
+        🏷 Tipo de operación: {datos['tipo_operacion']}  
+        🏡 Tipo de propiedad: {datos['tipo']}  
+        📍 Ubicación: {datos['ubicacion']}  
+        📐 Superficie: {datos['m2']} m² construidos, {datos['m2_utiles']} m² útiles, {datos['m2_terreno']} m² de terreno  
+        🛏 Habitaciones: {datos['habitaciones']} | 🛁 Baños: {datos['baños']}  
+        🌞 Fachada: {datos['fachada']} | Orientación: {datos['orientacion']}  
+        📈 Estado: {datos['estado']} | Certificado energético: {datos['certificado']}  
+        🏗 Suelo interior: {datos['suelo_interior']} | Suelo exterior: {datos['suelo_exterior']}  
+        ✨ Extras vivienda: {', '.join(datos['extras_vivienda']) if datos['extras_vivienda'] else 'Ninguno'}  
+        🏢 Extras edificio: {', '.join(datos['extras_edificio']) if datos['extras_edificio'] else 'Ninguno'}  
+        📸 Terraza: {datos['metros_terraza']} m² | Balcón: {datos['metros_balcon']} m² | Trastero: {datos['metros_trastero']} m² | Garaje: {datos['metros_garaje']} m²  
+        🗺 Servicios cercanos: {datos['descripcion_servicios']}  
+        🌊/🏞 Otros (vistas, entorno, etc.): {datos['descripcion_cercania']}  
+        💶 Precio: {datos['precio']} € | Gastos comunidad: {datos['gastos']} €  
+        ⚠ Situación (ocupado, libre, alquilado, etc.): {datos['situacion']}  
+        📝 Información adicional: {datos['informacion_adicional']}  
+        📣 Destino del anuncio: {datos['destino']}  
 
-    - Para portales inmobiliarios, prioriza claridad, SEO y llamadas a la acción que inviten a contactar o visitar la propiedad.  
-    - Para redes sociales, usa frases cortas, emotivas y directas, integra emojis y termina con hashtags populares y específicos de la ubicación.
-
-    Escribe el anuncio como un copywriter inmobiliario de primer nivel, que comunica con naturalidad, emoción y profesionalismo para captar la atención y generar deseo.
-    El anuncio dete tener maximo 850 caracteres para portales y 600 para redes sociales, y bien estructurado en parrafos separados para facilitar su lectura.
+        🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
+        Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
         """
+
         response = client.chat.completions.create(
             model="gpt-4",
             messages=[
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=200
+            max_tokens=1000
         )
 
         return response.choices[0].message.content
-
 
 # Botón para generar el anuncio
 
