@@ -791,7 +791,7 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         El anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
         del destino seleccionado, si es para portales inmobiliarios o redes sociales.
-        No olvides no exceder el límite de caracteres.
+        No superes el numerro de caracteres cuando generes el anuncio.
         """
 
         response = client.chat.completions.create(
