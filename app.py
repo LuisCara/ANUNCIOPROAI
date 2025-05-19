@@ -763,8 +763,8 @@ elif menu == textos[lang]["nav"][1]:
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
-          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. Longitud maxima de 850 caracteres incluidos espacios en blanco.
-          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags. Longitud maxima de 600 caracteres incluyendo los espacios en blanco.
+          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. Longitud maxima de 850 caracteres incluidos los esacios entre palabras.
+          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags. Longitud maxima de 600 caracteres incluyendo los espacios entre palabras.
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
