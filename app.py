@@ -1,5 +1,9 @@
-```python
 import os
+
+# Eliminar variables de entorno SSL problemáticas al inicio
+os.environ.pop("SSL_CERT_FILE", None)
+os.environ.pop("SSL_CERT_DIR", None)
+
 import streamlit as st
 import re
 import io
@@ -15,15 +19,12 @@ import requests
 import zipfile
 import tempfile
 import logging
+
 from dotenv import load_dotenv
+load_dotenv()
+
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email
-import urllib.parse
-import time
-
-# Eliminar variables de entorno SSL problemáticas al inicio
-os.environ.pop("SSL_CERT_FILE", None)
-os.environ.pop("SSL_CERT_DIR", None)
 
 # Fuerza a usar certificados válidos
 os.environ['SSL_CERT_FILE'] = certifi.where()
@@ -35,21 +36,23 @@ logger = logging.getLogger(__name__)
 # Configurar Cloudinary
 try:
     cloudinary.config(
-        cloud_name=st.secrets["cloudinary"]["cloud_name"],
-        api_key=st.secrets["cloudinary"]["api_key"],
-        api_secret=st.secrets["cloudinary"]["api_secret"]
-    )
+    cloud_name=st.secrets["cloudinary"]["cloud_name"],
+    api_key=st.secrets["cloudinary"]["api_key"],
+    api_secret=st.secrets["cloudinary"]["api_secret"]
+)
+
 except Exception as e:
     st.error(f"Error al configurar Cloudinary: {str(e)}")
     st.stop()
 
-# Inicializa el cliente de OpenAI
+# Inicializa el cliente de OpenAI (solo para análisis de imágenes)
 try:
-    client = OpenAI(api_key=st.secrets["openai"]["api_key"])
+    client  = OpenAI(api_key=st.secrets["openai"]["api_key"])
 except Exception as e:
     st.error(f"Error al inicializar el cliente de OpenAI: {str(e)}")
+    st.error("Verifica que la variable de entorno OPENAI_API_KEY esté configurada correctamente y que no haya problemas con las variables SSL_CERT_FILE o SSL_CERT_DIR.")
     st.stop()
-
+    
 # Configuración de la página
 st.set_page_config(page_title="AnuncioProAI", page_icon="🏠", layout="wide")
 
@@ -183,12 +186,16 @@ if menu == textos[lang]["nav"][0]:
 
 # Generador
 elif menu == textos[lang]["nav"][1]:
+
+    # Inicializar session_state para información adicional
     if "informacion_adicional" not in st.session_state:
         st.session_state.informacion_adicional = ""
 
+    # Tipo de operación
     st.subheader("⚙️ Tipo de operación")
     tipo_operacion = st.selectbox("¿Se trata de una venta o alquiler?", ["Venta", "Alquiler", "Alquiler vacacional", "Alquiler con opción a compra"])
 
+    # Sección de datos del inmueble
     st.subheader("📋 Características del inmueble")
     tipo = st.selectbox("Tipo de propiedad", [
         "Piso", "Ático", "Dúplex", "Estudio / loft", "Casa", "Chalet", "Adosado",
@@ -210,6 +217,7 @@ elif menu == textos[lang]["nav"][1]:
         "Sureste", "Suroeste"
     ])
 
+    # Selección de tipos de suelo
     st.subheader("🪵 Tipos de suelo")
     suelo_interior = st.selectbox("Tipo de suelo en el interior", [
         "Gres", "Parquet", "Tarima flotante", "Baldosa cerámica", "Mármol", "Granito", "Vinílico", "Moqueta", "Cemento pulido", "Laminado", "Corcho"
@@ -218,6 +226,7 @@ elif menu == textos[lang]["nav"][1]:
         "Ninguno", "Grava", "Pavimento de adoquín", "Hormigón", "Terracota", "Decking de madera", "Piedra natural", "Césped artificial", "Pavimento permeable"
     ])
 
+    # Características adicionales
     st.subheader("✨ Extras")
     extras_vivienda = st.multiselect("Características de la vivienda", [
         "Semiamueblado", "Amueblado", "Armarios empotrados", "Aire acondicionado", "Terraza", "Balcón", "Lavadero", "Chimenea", "Trastero", "Plaza de garaje"
@@ -230,6 +239,7 @@ elif menu == textos[lang]["nav"][1]:
     metros_balcon = 0
     metros_trastero = 0
     metros_garaje = 0
+
     if "Terraza" in extras_vivienda:
         metros_terraza = st.number_input("Metros cuadrados de la terraza", min_value=1, max_value=1000)
     if "Balcón" in extras_vivienda:
@@ -239,16 +249,20 @@ elif menu == textos[lang]["nav"][1]:
     if "Plaza de garaje" in extras_vivienda:
         metros_garaje = st.number_input("Metros cuadrados de la plaza de garaje", min_value=1, max_value=1000)
 
+    # Localización del inmueble y servicios cercanos
     st.subheader("📍 Localización y servicios cercanos")
     ubicacion = st.text_input("📍 Dirección del inmueble", "Introduce la dirección del inmueble aquí")
+
     servicios_cercanos = st.multiselect(
         "Selecciona los servicios cercanos",
         ["Centro médico", "Colegios", "Centros comerciales", "Transporte público", "Parques", "Tiendas y restaurantes", "Gimnasios", "Farmacias", "Estaciones de tren", "Aeropuerto"]
     )
+
     cerca_playa = st.checkbox("Cerca de la playa")
     primera_linea_de_playa = st.checkbox("Primera línea de playa")
     segunda_linea_de_playa = st.checkbox("Segunda línea de playa")
     cerca_montana = st.checkbox("Cerca de la montaña")
+
     distancia_playa = None
     distancia_montana = None
     if cerca_playa:
@@ -261,16 +275,19 @@ elif menu == textos[lang]["nav"][1]:
         descripcion_servicios += ", ".join(servicios_cercanos)
     else:
         descripcion_servicios = "No se han seleccionado servicios cercanos."
+
     descripcion_cercania = ""
     if cerca_playa:
         descripcion_cercania = f"Está a {distancia_playa} metros de la playa."
     elif cerca_montana:
         descripcion_cercania = f"Está a {distancia_montana} metros de la montaña."
+
     st.write(f"🔑 **Dirección**: {ubicacion if ubicacion else 'No se ha proporcionado una dirección.'}")
     st.write(f"🏙 **Servicios cercanos**: {descripcion_servicios}")
     if descripcion_cercania:
         st.write(f"🌊/🏞 **Cercanía**: {descripcion_cercania}")
 
+    # Precio y situación legal
     st.subheader("💶 Precio y situación")
     precio = st.number_input("Precio del inmueble (€)", min_value=0)
     gastos = st.number_input("Gastos de comunidad (€ / mes)", min_value=0)
@@ -278,12 +295,15 @@ elif menu == textos[lang]["nav"][1]:
         "No, en ninguna situación excepcional", "Ocupada ilegalmente", "Alquilada, con inquilinos", "Nuda propiedad"
     ])
 
+    # Información adicional
     st.subheader("📝 Información adicional")
     informacion_adicional = st.text_area("¿Hay algo más que quieras añadir sobre la propiedad?")
     if informacion_adicional:
         st.write("Información adicional:", informacion_adicional)
 
+    # Función para recopilar todos los datos
     def recopilar_datos(destino_seleccionado):
+        """Recopila todos los datos introducidos en el formulario"""
         datos = {
             "tipo_operacion": tipo_operacion,
             "tipo": tipo,
@@ -316,40 +336,54 @@ elif menu == textos[lang]["nav"][1]:
         }
         return datos
 
+    # Función para convertir imagen a base64
     def imagen_a_base64(imagen):
         buffered = io.BytesIO()
-        imagen.save(buffered, format="JPEG", quality=95)
+        imagen.save(buffered, format="JPEG")
         img_str = base64.b64encode(buffered.getvalue()).decode()
         return img_str
 
+    # Función para aplicar mejoras con PIL
     def aplicar_mejoras_pil(imagen, opciones):
         img = imagen.convert("RGB")
+        
         if opciones["mejorar_iluminacion"]:
             enhancer = ImageEnhance.Brightness(img)
-            img = enhancer.enhance(opciones["brillo"])
+            img = enhancer.enhance(opciones["brillo"])  # Brillo ajustable
             enhancer = ImageEnhance.Contrast(img)
-            img = enhancer.enhance(opciones["contraste"])
+            img = enhancer.enhance(opciones["contraste"])  # Contraste ajustable
+
         if opciones["corregir_color"]:
             enhancer = ImageEnhance.Color(img)
-            img = enhancer.enhance(opciones["saturacion"])
+            img = enhancer.enhance(opciones["saturacion"])  # Saturación ajustable
+
+        # Nuevas mejoras
         if opciones["mejorar_nitidez"]:
             enhancer = ImageEnhance.Sharpness(img)
-            img = enhancer.enhance(opciones["nivel_nitidez"])
+            img = enhancer.enhance(opciones["nivel_nitidez"])  # Nitidez ajustable
+
         if opciones["reducir_ruido"]:
+            # PIL no tiene una función directa para reducción de ruido, pero podemos simularlo con un suavizado
             img = img.filter(ImageFilter.GaussianBlur(radius=opciones["nivel_ruido"] * 0.3))
+
         if opciones["ajustar_sombras"]:
             enhancer = ImageEnhance.Brightness(img)
-            img = enhancer.enhance(opciones["nivel_sombras"])
+            img = enhancer.enhance(opciones["nivel_sombras"])  # Ajuste de sombras (simulado con brillo)
+
         if opciones["mejorar_detalles"]:
             img = img.filter(ImageFilter.DETAIL)
+
         if opciones["ajustar_temperatura"]:
+            # Ajuste de temperatura (simulado ajustando canales RGB)
             r, g, b = img.split()
-            if opciones["temperatura"] > 0:
+            if opciones["temperatura"] > 0:  # Más cálido (aumentar rojo)
                 r = r.point(lambda i: i + (opciones["temperatura"] * 50))
-            elif opciones["temperatura"] < 0:
+            elif opciones["temperatura"] < 0:  # Más frío (aumentar azul)
                 b = b.point(lambda i: i + (-opciones["temperatura"] * 50))
             img = Image.merge("RGB", (r, g, b))
+
         if opciones["recorte_automatico"]:
+            # Simulación de recorte automático (centrado y recortado al 80% del tamaño original)
             width, height = img.size
             new_size = int(min(width, height) * 0.8)
             left = (width - new_size) // 2
@@ -357,8 +391,10 @@ elif menu == textos[lang]["nav"][1]:
             right = left + new_size
             bottom = top + new_size
             img = img.crop((left, top, right, bottom))
+
         if opciones["rotar_imagen"]:
             img = img.rotate(opciones["angulo_rotacion"], expand=True)
+
         if opciones["aplicar_filtro"] != "Ninguno":
             if opciones["aplicar_filtro"] == "HDR":
                 enhancer = ImageEnhance.Contrast(img)
@@ -367,30 +403,40 @@ elif menu == textos[lang]["nav"][1]:
                 img = enhancer.enhance(1.5)
             elif opciones["aplicar_filtro"] == "Vintage":
                 enhancer = ImageEnhance.Color(img)
-                img = enhancer.enhance(0.7)
+                img = enhancer.enhance(0.7)  # Reducir saturación
                 r, g, b = img.split()
-                r = r.point(lambda i: i + 20)
+                r = r.point(lambda i: i + 20)  # Añadir tono sepia
                 img = Image.merge("RGB", (r, g, b))
             elif opciones["aplicar_filtro"] == "Blanco y Negro":
                 img = img.convert("L").convert("RGB")
+
         return img
 
+    # Función para validar imagen
     def validar_imagen(imagen):
+        """Valida que la imagen sea válida y cumpla con los requisitos"""
         try:
+            # Verificar que sea un objeto PIL válido
             if not isinstance(imagen, Image.Image):
                 return False, "La imagen no es un objeto PIL válido."
-            max_size = 1024
+            
+            # Verificar dimensiones
+            max_size = 256  # Reducido a la mitad para optimizar tamaño
             if max(imagen.size) > max_size:
                 imagen.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
+            
+            # Guardar en un buffer para verificar tamaño
             buffer = io.BytesIO()
-            imagen.save(buffer, format="JPEG", quality=95)
-            size_mb = len(buffer.getvalue()) / (1024 * 1024)
+            imagen.save(buffer, format="JPEG", quality=80)
+            size_mb = len(buffer.getvalue()) / (1024 * 1024)  # Tamaño en MB
             if size_mb > 4:
                 return False, f"El tamaño de la imagen ({size_mb:.2f} MB) excede el límite de 4 MB."
+            
             return True, None
         except Exception as e:
             return False, f"Error al validar la imagen: {str(e)}"
 
+    # Función para verificar si un public_id existe en Cloudinary
     def verificar_public_id(public_id):
         try:
             result = cloudinary.api.resource(public_id)
@@ -399,24 +445,30 @@ elif menu == textos[lang]["nav"][1]:
             logger.error(f"Error al verificar public_id {public_id}: {str(e)}")
             return False
 
-    def procesar_imagen_con_ia(imagen, opciones, formato_salida):
+    # Función para procesar imagen con Cloudinary
+    def procesar_imagen_con_ia(imagen, opciones):
         try:
+            # Validar imagen
             es_valida, mensaje_error = validar_imagen(imagen)
             if not es_valida:
                 st.error(mensaje_error)
                 return None
 
+            # Aplicar mejoras locales con PIL
             imagen_mejorada = aplicar_mejoras_pil(imagen, opciones)
             
+            # Guardar imagen como JPEG en un archivo temporal
             with tempfile.NamedTemporaryFile(suffix=".jpeg", delete=False) as temp_file:
-                imagen_mejorada.save(temp_file.name, format="JPEG", quality=95)
+                imagen_mejorada.save(temp_file.name, format="JPEG", quality=80)  # Reducido para optimizar tamaño
                 temp_file_path = temp_file.name
 
+            # Depuración: registrar parámetros
             logger.debug(f"Procesando imagen: {temp_file_path}")
             file_size_mb = os.path.getsize(temp_file_path) / (1024 * 1024)
             logger.debug(f"Tamaño del archivo: {file_size_mb:.2f} MB")
             logger.debug(f"Opciones de procesamiento: {opciones}")
 
+            # Subir imagen a Cloudinary
             upload_result = cloudinary.uploader.upload(
                 temp_file_path,
                 folder="anuncioproai",
@@ -426,35 +478,34 @@ elif menu == textos[lang]["nav"][1]:
             image_url = upload_result["secure_url"]
             logger.debug(f"Imagen subida a Cloudinary: {image_url}")
 
-            # Mapear formato_salida a valores compatibles con Cloudinary
-            formato_cloudinary = "jpg" if formato_salida.lower() == "jpeg" else formato_salida.lower()
-
+            # Construir transformaciones básicas
             transformations = [
-                {"width": 1024, "height": 1024, "crop": "limit"},
-                {"quality": 95},
-                {"fetch_format": formato_cloudinary}
+                {"width": 256, "height": 256, "crop": "limit"},  # Reducido a la mitad para optimizar tamaño
+                {"quality": "auto:good"},  # Optimización con buena calidad
+                {"fetch_format": "webp"}  # Usar WebP para menor tamaño
             ]
 
-            # Codificar public_id para evitar caracteres no válidos
-            encoded_public_id = urllib.parse.quote(public_id)
-            transformed_url = cloudinary.CloudinaryImage(encoded_public_id).build_url(
+            # Generar URL con transformaciones
+            transformed_url = cloudinary.CloudinaryImage(public_id).build_url(
                 transformation=transformations
             )
             logger.debug(f"URL de imagen transformada: {transformed_url}")
+            st.write(f"URL de Cloudinary para depuración: {transformed_url}")
 
-            # Reintentar la solicitud hasta 3 veces
-            max_retries = 3
-            for attempt in range(max_retries):
-                response = requests.get(transformed_url)
-                logger.debug(f"Intento {attempt + 1} - Código de estado: {response.status_code}")
-                if response.status_code == 200:
-                    break
-                time.sleep(1)
-            else:
-                st.error(f"Error al descargar la imagen de Cloudinary tras {max_retries} intentos: Código de estado {response.status_code}")
+            # Descargar imagen procesada
+            response = requests.get(transformed_url)
+            logger.debug(f"Respuesta de Cloudinary - Código de estado: {response.status_code}")
+            logger.debug(f"Respuesta de Cloudinary - Tipo de contenido: {response.headers.get('Content-Type')}")
+
+            # Verificar que la respuesta sea válida
+            if response.status_code != 200:
+                st.error(f"Error al descargar la imagen de Cloudinary: Código de estado {response.status_code}")
                 st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
-                os.unlink(temp_file_path)
+                # Guardar respuesta en archivo para inspección
+                with open("cloudinary_error.txt", "w") as f:
+                    f.write(f"URL: {transformed_url}\n\nError: {response.text}")
+                st.write("El error de Cloudinary ha sido guardado en 'cloudinary_error.txt' para inspección.")
                 return imagen_mejorada
 
             content_type = response.headers.get("Content-Type", "").lower()
@@ -462,24 +513,28 @@ elif menu == textos[lang]["nav"][1]:
                 st.error(f"La respuesta de Cloudinary no es una imagen (Content-Type: {content_type})")
                 st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
-                os.unlink(temp_file_path)
                 return imagen_mejorada
 
+            # Intentar abrir la imagen
             try:
                 imagen_procesada = Image.open(io.BytesIO(response.content))
+                # Registrar tamaño de la imagen procesada
                 buffered = io.BytesIO()
-                imagen_procesada.save(buffered, format=formato_salida, quality=95)
+                imagen_procesada.save(buffered, format="WEBP", quality=80)
                 processed_size_mb = len(buffered.getvalue()) / (1024 * 1024)
                 logger.debug(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
                 st.write(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
             except Exception as e:
                 st.error(f"Error al abrir la imagen procesada: {str(e)}")
-                st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
-                os.unlink(temp_file_path)
                 return imagen_mejorada
 
+            # Eliminar archivo temporal
             os.unlink(temp_file_path)
+
+            # Eliminar imagen de Cloudinary para no acumular (opcional)
+            # cloudinary.uploader.destroy(public_id)
+
             return imagen_procesada
 
         except Exception as e:
@@ -489,6 +544,7 @@ elif menu == textos[lang]["nav"][1]:
                 os.unlink(temp_file_path)
             return imagen_mejorada
 
+    # Función para analizar imagen con IA
     def analizar_imagen(imagen):
         try:
             imagen_base64 = imagen_a_base64(imagen)
@@ -522,10 +578,12 @@ elif menu == textos[lang]["nav"][1]:
             st.error(f"Error al analizar la imagen: {str(e)}")
             return None
 
+    # Interfaz de usuario para imágenes
     st.subheader("📸 Añadir imágenes o planos del inmueble")
+
+    # Opciones de procesamiento de imágenes
     st.write("Opciones de procesamiento de imágenes:")
     procesar_imagenes = st.checkbox("Procesar imágenes con IA", value=True)
-    formato_salida = st.selectbox("Formato de salida de las imágenes", ["JPEG", "WebP"], help="JPEG ofrece mayor compatibilidad, WebP reduce el tamaño del archivo.")
     st.write("Selecciona qué mejoras aplicar a las imágenes:")
     col1_img, col2_img = st.columns(2)
 
@@ -544,39 +602,52 @@ elif menu == textos[lang]["nav"][1]:
             saturacion = 1.0
 
     with col2_img:
+        # Nuevas opciones de retoque fotográfico
         mejorar_nitidez = st.checkbox("Mejorar nitidez", value=True)
         if mejorar_nitidez:
             nivel_nitidez = st.slider("Nivel de nitidez", 0.5, 2.0, 1.2)
         else:
             nivel_nitidez = 1.0
+
         reducir_ruido = st.checkbox("Reducir ruido", value=False)
         if reducir_ruido:
             nivel_ruido = st.slider("Nivel de reducción de ruido", 0.5, 2.0, 1.0)
         else:
             nivel_ruido = 1.0
+
         ajustar_sombras = st.checkbox("Ajustar sombras", value=False)
         if ajustar_sombras:
             nivel_sombras = st.slider("Nivel de ajuste de sombras", 0.5, 1.5, 1.0)
         else:
             nivel_sombras = 1.0
+
         mejorar_detalles = st.checkbox("Mejorar detalles (enfoque fino)", value=False)
+
         ajustar_temperatura = st.checkbox("Ajustar temperatura de color", value=False)
         if ajustar_temperatura:
             temperatura = st.slider("Temperatura (frío a cálido)", -0.5, 0.5, 0.0)
         else:
             temperatura = 0.0
+
         recorte_automatico = st.checkbox("Recorte automático (enfocar espacio principal)", value=False)
+
         rotar_imagen = st.checkbox("Rotar imagen", value=False)
         if rotar_imagen:
             angulo_rotacion = st.slider("Ángulo de rotación (grados)", -180, 180, 0)
         else:
             angulo_rotacion = 0
+
         aplicar_filtro = st.selectbox("Aplicar filtro estilizado", ["Ninguno", "HDR", "Vintage", "Blanco y Negro"])
+
         analizar_caracteristicas = st.checkbox("Analizar características no mencionadas", value=True)
 
+    # Subida de archivos
     uploaded_files = st.file_uploader("Sube fotos o planos", type=["jpg", "jpeg", "png"], accept_multiple_files=True)
+
+    # Almacenar imágenes procesadas
     imagenes_procesadas = []
 
+    # Mostrar y procesar las imágenes
     if uploaded_files:
         st.write("Imágenes cargadas:")
         for i, uploaded_file in enumerate(uploaded_files):
@@ -585,9 +656,10 @@ elif menu == textos[lang]["nav"][1]:
                 with col_orig:
                     st.write(f"Imagen original {i+1}:")
                     image = Image.open(uploaded_file)
-                    st.image(image, caption=f"Original: {uploaded_file.name}", width=512)
+                    st.image(image, caption=f"Original: {uploaded_file.name}", width=256)  # Reducido para visualización
+                    # Mostrar tamaño de la imagen original
                     buffer = io.BytesIO()
-                    image.save(buffer, format="JPEG", quality=95)
+                    image.save(buffer, format="JPEG", quality=80)
                     original_size_mb = len(buffer.getvalue()) / (1024 * 1024)
                     st.write(f"Tamaño original: {original_size_mb:.2f} MB")
 
@@ -615,19 +687,17 @@ elif menu == textos[lang]["nav"][1]:
                             "aplicar_filtro": aplicar_filtro
                         }
                         with st.spinner("Procesando imagen..."):
-                            imagen_procesada = procesar_imagen_con_ia(image, opciones_proceso, formato_salida)
+                            imagen_procesada = procesar_imagen_con_ia(image, opciones_proceso)
                         if imagen_procesada:
-                            st.image(imagen_procesada, caption=f"Procesada: {uploaded_file.name}", width=512)
+                            st.image(imagen_procesada, caption=f"Procesada: {uploaded_file.name}", width=256)  # Reducido para visualización
                             buffered = io.BytesIO()
-                            imagen_procesada.save(buffered, format=formato_salida, quality=95)
-                            file_extension = "jpg" if formato_salida.lower() == "jpeg" else formato_salida.lower()
-                            file_name = f"procesado_{uploaded_file.name.rsplit('.', 1)[0]}.{file_extension}"
-                            imagenes_procesadas.append((buffered.getvalue(), file_name))
+                            imagen_procesada.save(buffered, format="WEBP", quality=80)
+                            imagenes_procesadas.append((buffered.getvalue(), f"procesado_{uploaded_file.name.replace('.jpeg', '.webp').replace('.jpg', '.webp').replace('.png', '.webp')}"))
                             st.download_button(
                                 label="Descargar imagen procesada",
                                 data=buffered.getvalue(),
-                                file_name=file_name,
-                                mime=f"image/{file_extension}"
+                                file_name=f"procesado_{uploaded_file.name.replace('.jpeg', '.webp').replace('.jpg', '.webp').replace('.png', '.webp')}",
+                                mime="image/webp"
                             )
 
                     if analizar_caracteristicas:
@@ -650,26 +720,29 @@ elif menu == textos[lang]["nav"][1]:
                                         st.session_state.informacion_adicional += f"\nInformación detectada en imagen {i+1}:\n{info_para_anuncio}\n"
                                 st.write(f"Archivo {uploaded_file.name} cargado correctamente.")
 
+        # Botón para descargar todas las imágenes procesadas
         if imagenes_procesadas:
             zip_buffer = io.BytesIO()
             with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
                 for img_data, img_name in imagenes_procesadas:
                     zip_file.writestr(img_name, img_data)
             zip_buffer.seek(0)
-            zip_name = f"imagenes_procesadas_{ubicacion.replace(' ', '_') or 'propiedad'}.zip"
             st.download_button(
                 label="Descargar todas las imágenes procesadas",
                 data=zip_buffer,
-                file_name=zip_name,
+                file_name="imagenes_procesadas.zip",
                 mime="application/zip"
             )
 
+    # Destino del anuncio
     st.subheader("📣 Selecciona el destino del anuncio")
     destino = st.radio(
         "¿Dónde quieres publicar el anuncio?",
         ("Portales inmobiliarios (Idealista, Fotocasa, Milanuncios)", "Redes sociales (Facebook, Instagram)")
     )
 
+    # Actualizar la función de generación de anuncio
+   
     def generar_anuncio(datos):
         if hasattr(st.session_state, 'informacion_adicional') and st.session_state.informacion_adicional:
             if "informacion_adicional" in datos:
@@ -679,17 +752,24 @@ elif menu == textos[lang]["nav"][1]:
 
         prompt = f"""
         Eres un experto en marketing inmobiliario internacional, especializado en crear anuncios profesionales y persuasivos para la venta o alquiler de propiedades en distintos países y plataformas.
+
         Tu objetivo es generar un anuncio de alto impacto, optimizado para:
+
         1. **Portales inmobiliarios** como Idealista, Fotocasa, Milanuncios, Zillow, Immowelt, SeLoger, Rightmove…
         2. **Redes sociales** como Instagram, Facebook, TikTok o LinkedIn.
+
         El anuncio debe:
+
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
         - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. La longitud máxima del anuncio tiene que ser de **850 caracteres contando espacios**, sin hashtags.
         - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad. La longitud máxima del anuncio tiene que ser de **600 caracteres contando espacios**, incluyendo hashtags.
+
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
+
         📝 DATOS DISPONIBLES:
+
         🏷 Tipo de operación: {datos['tipo_operacion']}  
         🏡 Tipo de propiedad: {datos['tipo']}  
         📍 Ubicación: {datos['ubicacion']}  
@@ -707,33 +787,42 @@ elif menu == textos[lang]["nav"][1]:
         ⚠ Situación (ocupado, libre, alquilado, etc.): {datos['situacion']}  
         📝 Información adicional: {datos['informacion_adicional']}  
         📣 Destino del anuncio: {datos['destino']}  
+
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.  
         **No superes bajo ningún concepto el número de caracteres máximo indicado para el destino.**  
         Si el texto generado supera el límite, reduce o sintetiza sin perder el impacto ni la claridad, y no añadas información irrelevante.  
         Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales y bien estructurado dividido en párrafos, sin faltas de ortografía.
-        """
+"""
+
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
             temperature=0.7,
             max_tokens=1000
         )
+
         return response.choices[0].message.content
 
-    st.subheader("🧠 Generador de anuncio con IA")
-    if st.button("✨ Generar anuncio optimizado"):
-        datos = recopilar_datos(destino)
-        anuncio = generar_anuncio(datos)
-        st.success("✅ Anuncio generado con éxito:")
-        st.markdown("📝 **Anuncio generado**")
-        st.markdown(anuncio)
-        st.download_button(
-            label="📥 Descargar anuncio",
-            data=anuncio,
-            file_name="anuncio_inmobiliario.txt",
-            mime="text/plain"
-        )
+# Botón para generar el anuncio
 
+st.subheader("🧠 Generador de anuncio con IA")
+if st.button("✨ Generar anuncio optimizado"):
+    datos = recopilar_datos(destino)
+    anuncio = generar_anuncio(datos)
+    st.success("✅ Anuncio generado con éxito:")
+    st.markdown("📝 **Anuncio generado**")
+    st.markdown(anuncio)
+
+    # Botón para descargar anuncio
+    st.download_button(
+        label="📥 Descargar anuncio",
+        data=anuncio,
+        file_name="anuncio_inmobiliario.txt",
+        mime="text/plain"
+    )
+  
 # Planes
 elif menu == textos[lang]["nav"][2]:
     st.header(textos[lang]["planes_titulo"])
@@ -756,35 +845,26 @@ elif menu == textos[lang]["nav"][2]:
         st.write("- Hasta 5 idiomas")
         st.write("- IA personalizada")
         st.write("📞 Contactar")
-
+        
 # Contacto
-elif menu == textos[lang]["nav"][3]:
-    st.header(textos[lang]["contacto_titulo"])
-    st.markdown(textos[lang]["contacto_desc"])
-    nombre = st.text_input(textos[lang]["nombre"])
-    correo = st.text_input(textos[lang]["correo"])
-    mensaje = st.text_area(textos[lang]["mensaje"])
-    if st.button(textos[lang]["enviar"]):
-        if nombre and correo and mensaje:
-            if send_email(nombre, correo, mensaje):
-                st.success(textos[lang].get("exito", "¡Mensaje enviado con éxito!"))
-            else:
-                st.error(textos[lang].get("error", "No se pudo enviar el mensaje. Por favor, intenta de nuevo."))
-        else:
-            st.warning(textos[lang].get("advertencia", "Por favor, completa todos los campos."))
+
+# Cargar variables de entorno
+SENDGRID_FROM_EMAIL = st.secrets["sendgrid"]["from_email"]
+SENDGRID_API_KEY = st.secrets["sendgrid"]["api_key"]
 
 def send_email(nombre, correo, mensaje, to_email="luis.cara@hotmail.com"):
-    SENDGRID_FROM_EMAIL = st.secrets["sendgrid"]["from_email"]
-    SENDGRID_API_KEY = st.secrets["sendgrid"]["api_key"]
     if not SENDGRID_FROM_EMAIL or not SENDGRID_API_KEY:
         st.error("No se han definido correctamente las variables de entorno SENDGRID_FROM_EMAIL o SENDGRID_API_KEY.")
         return False
+
+    # Crear el mensaje de correo con Email() (formato correcto)
     message = Mail(
         from_email=Email(SENDGRID_FROM_EMAIL, name="Luis"),
         to_emails=to_email,
         subject=f"Nuevo mensaje de contacto de {nombre}",
         plain_text_content=f"Nombre: {nombre}\nCorreo: {correo}\nMensaje:\n{mensaje}"
     )
+    
     try:
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
@@ -796,3 +876,26 @@ def send_email(nombre, correo, mensaje, to_email="luis.cara@hotmail.com"):
     except Exception as e:
         st.error(f"Error al enviar el correo: {str(e)}")
         return False
+
+def contacto_page(lang, textos):
+    st.header(textos[lang]["contacto_titulo"])
+    st.markdown(textos[lang]["contacto_desc"])
+
+    # Formulario de contacto
+    nombre = st.text_input(textos[lang]["nombre"])
+    correo = st.text_input(textos[lang]["correo"])
+    mensaje = st.text_area(textos[lang]["mensaje"])
+
+    if st.button(textos[lang]["enviar"]):
+        if nombre and correo and mensaje:
+            if send_email(nombre, correo, mensaje):
+                st.success(textos[lang].get("exito", "¡Mensaje enviado con éxito!"))
+            else:
+                st.error(textos[lang].get("error", "No se pudo enviar el mensaje. Por favor, intenta de nuevo."))
+        else:
+            st.warning(textos[lang].get("advertencia", "Por favor, completa todos los campos."))
+
+# Mostrar la página de contacto
+if menu == textos[lang]["nav"][3]:
+    contacto_page(lang, textos)
+
