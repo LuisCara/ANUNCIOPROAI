@@ -807,12 +807,22 @@ elif menu == textos[lang]["nav"][1]:
 
 # Botón para generar el anuncio
 st.subheader("🧠 Generador de anuncio con IA")
+
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
+    
     st.success("✅ Anuncio generado con éxito:")
-    st.markdown("📝 **Anuncio generado**")
-    st.markdown(anuncio)        
+    st.markdown("📝 **Anuncio generado:**\n")
+    
+    # Dividir el anuncio en párrafos separando por doble salto de línea
+    parrafos = anuncio.split("\n\n")
+    
+    for p in parrafos:
+        p = p.strip()
+        if p:
+            st.markdown(p)
+            st.markdown("")  # Línea en blanco para separar párrafos
 
 # Planes
 elif menu == textos[lang]["nav"][2]:
