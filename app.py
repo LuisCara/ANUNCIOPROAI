@@ -790,7 +790,7 @@ elif menu == textos[lang]["nav"][1]:
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         No olvides la longitud maxima de 850 caracteres para portales inmobiliarios y 600 para redes sociales incluyendo los espacios entre palabras, no los superes, el anuncio bien estructurado y sin errores ortográficos y gramaticales, el formato ideal
-        para cada plataforma, bien para portales inmobiliarios o redes sociales.
+        para cada plataforma.
         """
 
         response = client.chat.completions.create(
