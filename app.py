@@ -814,11 +814,7 @@ if st.button("✨ Generar anuncio optimizado"):
     st.success("✅ Anuncio generado con éxito:")
     st.markdown("📝 **Anuncio generado**")
     st.markdown(anuncio)
-    # Mostrar cada párrafo con un salto de línea entre ellos
-    for p in parrafos:
-        st.markdown(p)
-        st.markdown("")  # Deja una línea en blanco entre párrafos
-
+  
 # Planes
 elif menu == textos[lang]["nav"][2]:
     st.header(textos[lang]["planes_titulo"])
