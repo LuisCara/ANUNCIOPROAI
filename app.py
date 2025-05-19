@@ -763,8 +763,8 @@ elif menu == textos[lang]["nav"][1]:
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
-          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. La Longitud maxima del anuncio tiene que ser de 850 caracteres contando los espacios entre palabras, sin hastags.
-          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags. La Longitud maxima del anuncio tiene que ser de 600 caracteres contando los espacios entre palabras.
+        - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. La longitud máxima del anuncio tiene que ser de **850 caracteres contando espacios**, sin hashtags.
+        - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad. La longitud máxima del anuncio tiene que ser de **600 caracteres contando espacios**, incluyendo hashtags.
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
@@ -788,11 +788,11 @@ elif menu == textos[lang]["nav"][1]:
         📝 Información adicional: {datos['informacion_adicional']}  
         📣 Destino del anuncio: {datos['destino']}  
 
-        🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
-        El anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
-        del destino seleccionado, si es para portales inmobiliarios o redes sociales.
-        No superes bajo ningun concepto el numero de caracteres maximo indicados cuando generes el anuncio.
-        """
+        🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.  
+        **No superes bajo ningún concepto el número de caracteres máximo indicado para el destino.**  
+        Si el texto generado supera el límite, reduce o sintetiza sin perder el impacto ni la claridad, y no añadas información irrelevante.  
+        Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales.
+"""
 
         response = client.chat.completions.create(
             model="gpt-4",
