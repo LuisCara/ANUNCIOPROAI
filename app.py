@@ -824,15 +824,6 @@ if st.button("✨ Generar anuncio optimizado"):
         file_name="anuncio_inmobiliario.txt",
         mime="text/plain"
     )
-
-    # Text area oculta para poder copiar
-    st.text_area("Anuncio para copiar", value=anuncio, height=200, key="anuncio_text_area")
-
-    # Botón para copiar el texto al portapapeles
-    if st.button("📋 Copiar anuncio"):
-        # Esto solo muestra mensaje, la copia real debe hacerse manualmente (Ctrl+C)
-        st.success("¡Texto copiado! Usa Ctrl+C para copiar el anuncio desde el cuadro de texto.")
-
   
 # Planes
 elif menu == textos[lang]["nav"][2]:
