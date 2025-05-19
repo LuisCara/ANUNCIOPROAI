@@ -791,7 +791,7 @@ elif menu == textos[lang]["nav"][1]:
     - Para redes sociales, usa frases cortas, emotivas y directas, integra emojis y termina con hashtags populares y específicos de la ubicación.
 
     Escribe el anuncio como un copywriter inmobiliario de primer nivel, que comunica con naturalidad, emoción y profesionalismo para captar la atención y generar deseo.
-    El anuncio dete tener maximo 850 caracteres para portales y 600 para redes sociales.
+    El anuncio dete tener maximo 850 caracteres para portales y 600 para redes sociales, y bien estructurado para facilitar su lectura.
         """
         response = client.chat.completions.create(
             model="gpt-4",
