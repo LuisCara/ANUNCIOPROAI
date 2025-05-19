@@ -807,9 +807,7 @@ elif menu == textos[lang]["nav"][1]:
 
 # Botón para generar el anuncio
 
-# st.subheader("🧠 Generador de anuncio con IA")
-import streamlit as st
-
+st.subheader("🧠 Generador de anuncio con IA")
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
