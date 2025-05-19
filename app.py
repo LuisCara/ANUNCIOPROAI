@@ -181,7 +181,8 @@ if menu == textos[lang]["nav"][0]:
     st.markdown(textos[lang]["inicio_desc"])
     for punto in textos[lang]["inicio_puntos"]:
         st.write(punto)
-    st.image("https://images.unsplash.com/photo-1600585154340-be6161a56a0c", use_column_width=True)
+    st.image("imagen_portada.png", width=1100)
+
     st.success(textos[lang]["inicio_mensaje"])
 
 # Generador
