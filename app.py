@@ -790,6 +790,7 @@ elif menu == textos[lang]["nav"][1]:
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
+        El prompt para portales inmobiliarios debe tener como maximo 850 caracteres y el de redes sociales 500 caracteres.
         """
 
         response = client.chat.completions.create(
