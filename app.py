@@ -1,3 +1,4 @@
+```python
 import os
 import streamlit as st
 import re
@@ -17,6 +18,8 @@ import logging
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Email
+import urllib.parse
+import time
 
 # Eliminar variables de entorno SSL problemáticas al inicio
 os.environ.pop("SSL_CERT_FILE", None)
@@ -83,7 +86,86 @@ textos = {
         "enviar": "Enviar",
         "error_imagen": "Error al procesar la imagen. Verifica que la imagen sea un PNG o JPEG válido y menor a 4 MB. Si el problema persiste, revisa los logs para detalles o contacta al soporte de Cloudinary."
     },
-    # ... (resto de los idiomas sin cambios, omitidos por brevedad)
+    "en": {
+        "titulo": "AnuncioProAI - AI-powered Real Estate Ad Generator",
+        "nav": ["Home", "Generator", "Plans", "Contact"],
+        "inicio_header": "Welcome to AnuncioProAI",
+        "inicio_desc": "Create professional and attractive real estate ads in seconds with the help of artificial intelligence.",
+        "inicio_puntos": [
+            "✅ Optimize your ads for portals and social networks.",
+            "✅ Automatically enhance images.",
+            "✅ Translate and adapt text to multiple languages."
+        ],
+        "inicio_mensaje": "Start creating your ad now!",
+        "planes_titulo": "Choose your plan",
+        "contacto_titulo": "Contact",
+        "contacto_desc": "Questions or suggestions? Write to us!",
+        "nombre": "Name",
+        "correo": "Email",
+        "mensaje": "Message",
+        "enviar": "Send",
+        "error_imagen": "Error processing the image. Verify that the image is a valid PNG or JPEG and less than 4 MB. If the issue persists, check the logs for details or contact Cloudinary support."
+    },
+    "fr": {
+        "titulo": "AnuncioProAI - Générateur d'annonces immobilières avec IA",
+        "nav": ["Accueil", "Générateur", "Plans", "Contact"],
+        "inicio_header": "Bienvenue sur AnuncioProAI",
+        "inicio_desc": "Générez des annonces immobilières professionnelles et attrayantes en quelques secondes grâce à l'intelligence artificielle.",
+        "inicio_puntos": [
+            "✅ Optimisez vos annonces pour les portails et les réseaux sociaux.",
+            "✅ Améliorez automatiquement les images.",
+            "✅ Traduisez et adaptez le texte en plusieurs langues."
+        ],
+        "inicio_mensaje": "Commencez à créer votre annonce maintenant !",
+        "planes_titulo": "Choisissez votre plan",
+        "contacto_titulo": "Contact",
+        "contacto_desc": "Des questions ou des suggestions ? Écrivez-nous !",
+        "nombre": "Nom",
+        "correo": "E-mail",
+        "mensaje": "Message",
+        "enviar": "Envoyer",
+        "error_imagen": "Erreur lors du traitement de l'image. Vérifiez que l'image est un PNG ou JPEG valide et inférieur à 4 Mo. Si le problème persiste, consultez les journaux pour plus de détails ou contactez le support Cloudinary."
+    },
+    "it": {
+        "titulo": "AnuncioProAI - Generatore di annunci immobiliari con IA",
+        "nav": ["Home", "Generatore", "Piani", "Contatto"],
+        "inicio_header": "Benvenuto su AnuncioProAI",
+        "inicio_desc": "Crea annunci immobiliari professionali e accattivanti in pochi secondi con l'aiuto dell'intelligenza artificiale.",
+        "inicio_puntos": [
+            "✅ Ottimizza i tuoi annunci per portali e social.",
+            "✅ Migliora automaticamente le immagini.",
+            "✅ Traduci e adatta il testo in più lingue."
+        ],
+        "inicio_mensaje": "Inizia subito a creare il tuo annuncio!",
+        "planes_titulo": "Scegli il tuo piano",
+        "contacto_titulo": "Contatto",
+        "contacto_desc": "Domande o suggerimenti? Scrivici!",
+        "nombre": "Nome",
+        "correo": "Email",
+        "mensaje": "Messaggio",
+        "enviar": "Invia",
+        "error_imagen": "Errore durante l'elaborazione dell'immagine. Verifica che l'immagine sia un PNG o JPEG valido e inferiore a 4 MB. Se il problema persiste, controlla i log per dettagli o contatta il supporto Cloudinary."
+    },
+    "de": {
+        "titulo": "AnuncioProAI - KI-gestützter Immobilienanzeigen-Generator",
+        "nav": ["Startseite", "Generator", "Pläne", "Kontakt"],
+        "inicio_header": "Willkommen bei AnuncioProAI",
+        "inicio_desc": "Erstellen Sie professionelle und ansprechende Immobilienanzeigen in Sekunden mit Hilfe von künstlicher Intelligenz.",
+        "inicio_puntos": [
+            "✅ Optimieren Sie Ihre Anzeigen für Portale und soziale Netzwerke.",
+            "✅ Bilder automatisch verbessern.",
+            "✅ Text in mehrere Sprachen übersetzen und anpassen."
+        ],
+        "inicio_mensaje": "Beginnen Sie jetzt mit der Erstellung Ihrer Anzeige!",
+        "planes_titulo": "Wählen Sie Ihren Plan",
+        "contacto_titulo": "Kontakt",
+        "contacto_desc": "Fragen oder Anregungen? Schreiben Sie uns!",
+        "nombre": "Name",
+        "correo": "E-Mail",
+        "mensaje": "Nachricht",
+        "enviar": "Senden",
+        "error_imagen": "Fehler bei der Verarbeitung des Bildes. Überprüfen Sie, ob das Bild ein gültiges PNG oder JPEG ist und weniger als 4 MB groß ist. Wenn das Problem weiterhin besteht, überprüfen Sie die Protokolle für Details oder wenden Sie sich an den Cloudinary-Support."
+    }
 }
 
 # Menú y navegación
@@ -236,7 +318,7 @@ elif menu == textos[lang]["nav"][1]:
 
     def imagen_a_base64(imagen):
         buffered = io.BytesIO()
-        imagen.save(buffered, format="JPEG", quality=95)  # Aumentado a 95 para mejor calidad
+        imagen.save(buffered, format="JPEG", quality=95)
         img_str = base64.b64encode(buffered.getvalue()).decode()
         return img_str
 
@@ -297,11 +379,11 @@ elif menu == textos[lang]["nav"][1]:
         try:
             if not isinstance(imagen, Image.Image):
                 return False, "La imagen no es un objeto PIL válido."
-            max_size = 1024  # Aumentado a 1024 para mejor resolución
+            max_size = 1024
             if max(imagen.size) > max_size:
                 imagen.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
             buffer = io.BytesIO()
-            imagen.save(buffer, format="JPEG", quality=95)  # Aumentado a 95
+            imagen.save(buffer, format="JPEG", quality=95)
             size_mb = len(buffer.getvalue()) / (1024 * 1024)
             if size_mb > 4:
                 return False, f"El tamaño de la imagen ({size_mb:.2f} MB) excede el límite de 4 MB."
@@ -327,7 +409,7 @@ elif menu == textos[lang]["nav"][1]:
             imagen_mejorada = aplicar_mejoras_pil(imagen, opciones)
             
             with tempfile.NamedTemporaryFile(suffix=".jpeg", delete=False) as temp_file:
-                imagen_mejorada.save(temp_file.name, format="JPEG", quality=95)  # Aumentado a 95
+                imagen_mejorada.save(temp_file.name, format="JPEG", quality=95)
                 temp_file_path = temp_file.name
 
             logger.debug(f"Procesando imagen: {temp_file_path}")
@@ -344,43 +426,57 @@ elif menu == textos[lang]["nav"][1]:
             image_url = upload_result["secure_url"]
             logger.debug(f"Imagen subida a Cloudinary: {image_url}")
 
+            # Mapear formato_salida a valores compatibles con Cloudinary
+            formato_cloudinary = "jpg" if formato_salida.lower() == "jpeg" else formato_salida.lower()
+
             transformations = [
-                {"width": 1024, "height": 1024, "crop": "limit"},  # Aumentado a 1024
-                {"quality": 95},  # Cambiado a 95 para mejor calidad
-                {"fetch_format": formato_salida.lower()}  # Usar formato seleccionado
+                {"width": 1024, "height": 1024, "crop": "limit"},
+                {"quality": 95},
+                {"fetch_format": formato_cloudinary}
             ]
 
-            transformed_url = cloudinary.CloudinaryImage(public_id).build_url(
+            # Codificar public_id para evitar caracteres no válidos
+            encoded_public_id = urllib.parse.quote(public_id)
+            transformed_url = cloudinary.CloudinaryImage(encoded_public_id).build_url(
                 transformation=transformations
             )
             logger.debug(f"URL de imagen transformada: {transformed_url}")
-            st.write(f"URL de Cloudinary para depuración: {transformed_url}")
 
-            response = requests.get(transformed_url)
-            logger.debug(f"Respuesta de Cloudinary - Código de estado: {response.status_code}")
-            logger.debug(f"Respuesta de Cloudinary - Tipo de contenido: {response.headers.get('Content-Type')}")
-
-            if response.status_code != 200:
-                st.error(f"Error al descargar la imagen de Cloudinary: Código de estado {response.status_code}")
+            # Reintentar la solicitud hasta 3 veces
+            max_retries = 3
+            for attempt in range(max_retries):
+                response = requests.get(transformed_url)
+                logger.debug(f"Intento {attempt + 1} - Código de estado: {response.status_code}")
+                if response.status_code == 200:
+                    break
+                time.sleep(1)
+            else:
+                st.error(f"Error al descargar la imagen de Cloudinary tras {max_retries} intentos: Código de estado {response.status_code}")
+                st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
+                os.unlink(temp_file_path)
                 return imagen_mejorada
 
             content_type = response.headers.get("Content-Type", "").lower()
             if not content_type.startswith("image/"):
                 st.error(f"La respuesta de Cloudinary no es una imagen (Content-Type: {content_type})")
+                st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
+                os.unlink(temp_file_path)
                 return imagen_mejorada
 
             try:
                 imagen_procesada = Image.open(io.BytesIO(response.content))
                 buffered = io.BytesIO()
-                imagen_procesada.save(buffered, format=formato_salida, quality=95)  # Aumentado a 95
+                imagen_procesada.save(buffered, format=formato_salida, quality=95)
                 processed_size_mb = len(buffered.getvalue()) / (1024 * 1024)
                 logger.debug(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
                 st.write(f"Tamaño de la imagen procesada: {processed_size_mb:.2f} MB")
             except Exception as e:
                 st.error(f"Error al abrir la imagen procesada: {str(e)}")
+                st.error(f"Detalles del error: {response.text}")
                 logger.error(f"Contenido de la respuesta: {response.text}")
+                os.unlink(temp_file_path)
                 return imagen_mejorada
 
             os.unlink(temp_file_path)
@@ -429,7 +525,7 @@ elif menu == textos[lang]["nav"][1]:
     st.subheader("📸 Añadir imágenes o planos del inmueble")
     st.write("Opciones de procesamiento de imágenes:")
     procesar_imagenes = st.checkbox("Procesar imágenes con IA", value=True)
-    formato_salida = st.selectbox("Formato de salida de las imágenes", ["JPEG", "WebP"], help="JPEG ofrece mayor compatibilidad, WebP reduce el tamaño del archivo.")  # Nuevo selector de formato
+    formato_salida = st.selectbox("Formato de salida de las imágenes", ["JPEG", "WebP"], help="JPEG ofrece mayor compatibilidad, WebP reduce el tamaño del archivo.")
     st.write("Selecciona qué mejoras aplicar a las imágenes:")
     col1_img, col2_img = st.columns(2)
 
@@ -489,7 +585,7 @@ elif menu == textos[lang]["nav"][1]:
                 with col_orig:
                     st.write(f"Imagen original {i+1}:")
                     image = Image.open(uploaded_file)
-                    st.image(image, caption=f"Original: {uploaded_file.name}", width=512)  # Aumentado para mejor visualización
+                    st.image(image, caption=f"Original: {uploaded_file.name}", width=512)
                     buffer = io.BytesIO()
                     image.save(buffer, format="JPEG", quality=95)
                     original_size_mb = len(buffer.getvalue()) / (1024 * 1024)
@@ -524,7 +620,7 @@ elif menu == textos[lang]["nav"][1]:
                             st.image(imagen_procesada, caption=f"Procesada: {uploaded_file.name}", width=512)
                             buffered = io.BytesIO()
                             imagen_procesada.save(buffered, format=formato_salida, quality=95)
-                            file_extension = formato_salida.lower()
+                            file_extension = "jpg" if formato_salida.lower() == "jpeg" else formato_salida.lower()
                             file_name = f"procesado_{uploaded_file.name.rsplit('.', 1)[0]}.{file_extension}"
                             imagenes_procesadas.append((buffered.getvalue(), file_name))
                             st.download_button(
@@ -560,7 +656,7 @@ elif menu == textos[lang]["nav"][1]:
                 for img_data, img_name in imagenes_procesadas:
                     zip_file.writestr(img_name, img_data)
             zip_buffer.seek(0)
-            zip_name = f"imagenes_procesadas_{ubicacion.replace(' ', '_') or 'propiedad'}.zip"  # Nombre más descriptivo
+            zip_name = f"imagenes_procesadas_{ubicacion.replace(' ', '_') or 'propiedad'}.zip"
             st.download_button(
                 label="Descargar todas las imágenes procesadas",
                 data=zip_buffer,
