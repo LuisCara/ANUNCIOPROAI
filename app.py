@@ -763,8 +763,8 @@ elif menu == textos[lang]["nav"][1]:
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
-          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras.
-          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina con hashtags relevantes según el país o ciudad.
+          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción clarasuy un maximo de 850 caracteres.
+          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina con hashtags relevantes según el país o ciudady un maximo de 500 caracteres.
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
@@ -790,7 +790,6 @@ elif menu == textos[lang]["nav"][1]:
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble.
-        El prompt para portales inmobiliarios debe tener como maximo 850 caracteres y el de redes sociales 500 caracteres.
         """
 
         response = client.chat.completions.create(
