@@ -763,8 +763,8 @@ elif menu == textos[lang]["nav"][1]:
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
-          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras, el anuncio tiene que tener un maximo de 850 caracteres incluyendo los espacios y sin emojis.
-          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas nada mas despues de los hastags, el anuncio tiene que tener un maximo de 600 caracteres incluyendo los espacios.
+          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras.
+          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags.
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
@@ -789,7 +789,7 @@ elif menu == textos[lang]["nav"][1]:
         📣 Destino del anuncio: {datos['destino']}  
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
-        No olvides la longitud maxima de 850 caracteres para portales inmobiliarios y 600 para redes sociales incluyendo los espacios entre palabras, no los superes, el anuncio bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
+        Muy importante no exceder la longitud maxima de 850 caracteres incluidos espacios en blanco para portales inmobiliarios y 600 caracteres para redes sociales incluyendo los espacios en blanco entre palabras, no los superes, el anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
         del destino seleccionado, si es para portales inmobiliarios o redes sociales.
         """
 
