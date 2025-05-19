@@ -789,7 +789,7 @@ elif menu == textos[lang]["nav"][1]:
         📣 Destino del anuncio: {datos['destino']}  
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
-        Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble, no olvides la longitud maxima de 850 caracteres para portales inmobiliarios y 600 para redes sociales incluyendo los espacios entre palabras, no los superes.
+        Incluye una mención a las imágenes mejoradas con IA si estas se han proporcionado, destacando los aspectos visuales del inmueble, no olvides la longitud maxima de 850 caracteres para portales inmobiliarios y 600 para redes sociales incluyendo los espacios entre palabras, no los superes, y bien estructurados en parrafos.
         """
 
         response = client.chat.completions.create(
