@@ -815,25 +815,13 @@ if st.button("✨ Generar anuncio optimizado"):
     st.success("✅ Anuncio generado con éxito:")
     st.markdown("📝 **Anuncio generado:**\n")
 
-    # Dividir el texto en frases por puntos y luego unirlas en párrafos
+    # Dividir el anuncio en frases por puntos
     frases = [frase.strip() for frase in anuncio.split('.') if frase.strip()]
-    
-    # Ahora agrupamos, por ejemplo, de 2 a 3 frases por párrafo para mejor lectura
-    parrafos = []
-    grupo = []
-    for i, frase in enumerate(frases, 1):
-        grupo.append(frase + '.')
-        if i % 2 == 0:  # cada 2 frases hacemos un párrafo
-            parrafos.append(' '.join(grupo))
-            grupo = []
-    # Añadir resto si queda
-    if grupo:
-        parrafos.append(' '.join(grupo))
 
-    # Mostrar cada párrafo con espacio entre ellos
-    for p in parrafos:
-        st.markdown(p)
-        st.markdown("")  # línea en blanco para separar párrafos
+    # Mostrar cada frase como un párrafo, agregando el punto al final y un salto entre líneas
+    for frase in frases:
+        st.markdown(f"{frase}.")
+        st.markdown("")  # Esto deja una sola línea en blanco entre frases
 
 # Planes
 elif menu == textos[lang]["nav"][2]:
