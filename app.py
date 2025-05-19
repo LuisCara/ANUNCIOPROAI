@@ -791,7 +791,7 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
         El anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
         del destino seleccionado, si es para portales inmobiliarios o redes sociales.
-        No superes el numero de caracteres por anuncio indicados cuando generes el anuncio.
+        No superes bajo ningun concepto el numero de caracteres maximo indicados cuando generes el anuncio.
         """
 
         response = client.chat.completions.create(
@@ -808,12 +808,31 @@ elif menu == textos[lang]["nav"][1]:
 # Botón para generar el anuncio
 
 # st.subheader("🧠 Generador de anuncio con IA")
+import streamlit as st
+
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
     st.success("✅ Anuncio generado con éxito:")
     st.markdown("📝 **Anuncio generado**")
     st.markdown(anuncio)
+
+    # Botón para descargar anuncio
+    st.download_button(
+        label="📥 Descargar anuncio",
+        data=anuncio,
+        file_name="anuncio_inmobiliario.txt",
+        mime="text/plain"
+    )
+
+    # Text area oculta para poder copiar
+    st.text_area("Anuncio para copiar", value=anuncio, height=200, key="anuncio_text_area")
+
+    # Botón para copiar el texto al portapapeles
+    if st.button("📋 Copiar anuncio"):
+        # Esto solo muestra mensaje, la copia real debe hacerse manualmente (Ctrl+C)
+        st.success("¡Texto copiado! Usa Ctrl+C para copiar el anuncio desde el cuadro de texto.")
+
   
 # Planes
 elif menu == textos[lang]["nav"][2]:
