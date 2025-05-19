@@ -762,7 +762,7 @@ elif menu == textos[lang]["nav"][1]:
     El texto debe:
 
     - Ser atractivo y fluido, evitando enumeraciones mecánicas o repetitivas.  
-    - Destacar no solo las características, sino el estilo de vida, los beneficios y el valor único que ofrece la propiedad.  
+    - Destacar no solo las características, sino el estilo de vida, los beneficios y el valor único que ofrece la propiedad. 
     - Adaptarse al canal de publicación, combinando información clara y profesional para portales, y un mensaje más emocional y dinámico para redes sociales.
 
     Con la siguiente información, redacta un anuncio que convenza, seduzca e informe de manera natural y efectiva:
@@ -791,7 +791,7 @@ elif menu == textos[lang]["nav"][1]:
     - Para redes sociales, usa frases cortas, emotivas y directas, integra emojis y termina con hashtags populares y específicos de la ubicación.
 
     Escribe el anuncio como un copywriter inmobiliario de primer nivel, que comunica con naturalidad, emoción y profesionalismo para captar la atención y generar deseo.
-    El anuncio dete tener maximo 850 caracteres para portales y 600 para redes sociales, y bien estructurado para facilitar su lectura.
+    El anuncio dete tener maximo 850 caracteres para portales y 600 para redes sociales, y bien estructurado en parrafos separados para facilitar su lectura.
         """
         response = client.chat.completions.create(
             model="gpt-4",
@@ -806,27 +806,14 @@ elif menu == textos[lang]["nav"][1]:
 
 
 # Botón para generar el anuncio
-st.subheader("🧠 Generador de anuncio con IA")
 
+# st.subheader("🧠 Generador de anuncio con IA")
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
-
     st.success("✅ Anuncio generado con éxito:")
-    st.markdown("📝 **Anuncio generado:**\n")
-
-    # Dividir el texto original en frases por puntos
-    frases = [frase.strip() + '.' for frase in anuncio.split('.') if frase.strip()]
-
-    # Agrupar las frases en 3 párrafos equilibrados
-    n = len(frases)
-    tercio = n // 3
-    parrafos = [
-        ' '.join(frases[:tercio]),
-        ' '.join(frases[tercio:2*tercio]),
-        ' '.join(frases[2*tercio:])
-    ]
-
+    st.markdown("📝 **Anuncio generado**")
+    st.markdown(anuncio)
     # Mostrar cada párrafo con un salto de línea entre ellos
     for p in parrafos:
         st.markdown(p)
