@@ -811,18 +811,29 @@ st.subheader("🧠 Generador de anuncio con IA")
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
-    
+
     st.success("✅ Anuncio generado con éxito:")
     st.markdown("📝 **Anuncio generado:**\n")
+
+    # Dividir el texto en frases por puntos y luego unirlas en párrafos
+    frases = [frase.strip() for frase in anuncio.split('.') if frase.strip()]
     
-    # Dividir el anuncio en párrafos separando por doble salto de línea
-    parrafos = anuncio.split("\n\n")
-    
+    # Ahora agrupamos, por ejemplo, de 2 a 3 frases por párrafo para mejor lectura
+    parrafos = []
+    grupo = []
+    for i, frase in enumerate(frases, 1):
+        grupo.append(frase + '.')
+        if i % 2 == 0:  # cada 2 frases hacemos un párrafo
+            parrafos.append(' '.join(grupo))
+            grupo = []
+    # Añadir resto si queda
+    if grupo:
+        parrafos.append(' '.join(grupo))
+
+    # Mostrar cada párrafo con espacio entre ellos
     for p in parrafos:
-        p = p.strip()
-        if p:
-            st.markdown(p)
-            st.markdown("")  # Línea en blanco para separar párrafos
+        st.markdown(p)
+        st.markdown("")  # línea en blanco para separar párrafos
 
 # Planes
 elif menu == textos[lang]["nav"][2]:
