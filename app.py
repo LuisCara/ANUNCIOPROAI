@@ -720,26 +720,19 @@ elif menu == textos[lang]["nav"][1]:
                                         st.session_state.informacion_adicional += f"\nInformación detectada en imagen {i+1}:\n{info_para_anuncio}\n"
                                 st.write(f"Archivo {uploaded_file.name} cargado correctamente.")
 
-        # Botón para descargar todas las imágenes procesadas
-         # imagenes_procesadas es una lista de tuplas: (PIL.Image, nombre_archivo)
-        # ejemplo: [(imagen1, "foto1.jpg"), (imagen2, "foto2.jpg")]
-
-        if imagenes_procesadas:
-            zip_buffer = io.BytesIO()
-            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
-                for imagen, nombre in imagenes_procesadas:
-                    img_byte_arr = io.BytesIO()
-                    # Guardar como JPG con calidad máxima (100)
-                    imagen.save(img_byte_arr, format='JPEG', quality=100)
-                    img_byte_arr = img_byte_arr.getvalue()
-                    zip_file.writestr(nombre, img_byte_arr)
-            zip_buffer.seek(0)
-            st.download_button(
-                label="Descargar todas las imágenes procesadas",
-                data=zip_buffer,
-                file_name="imagenes_procesadas.zip",
-                mime="application/zip"
-            )
+    # Botón para descargar todas las imágenes procesadas
+    if imagenes_procesadas:
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+            for img_data, img_name in imagenes_procesadas:
+                zip_file.writestr(img_name, img_data)
+        zip_buffer.seek(0)
+        st.download_button(
+            label="Descargar todas las imágenes procesadas",
+            data=zip_buffer,
+            file_name="imagenes_procesadas.zip",
+            mime="application/zip"
+        )
 
 
     # Destino del anuncio
