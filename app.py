@@ -720,19 +720,57 @@ elif menu == textos[lang]["nav"][1]:
                                         st.session_state.informacion_adicional += f"\nInformación detectada en imagen {i+1}:\n{info_para_anuncio}\n"
                                 st.write(f"Archivo {uploaded_file.name} cargado correctamente.")
 
-    # Botón para descargar todas las imágenes procesadas
-    if imagenes_procesadas:
-        zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
-            for img_data, img_name in imagenes_procesadas:
-                zip_file.writestr(img_name, img_data)
-        zip_buffer.seek(0)
-        st.download_button(
-            label="Descargar todas las imágenes procesadas",
-            data=zip_buffer,
-            file_name="imagenes_procesadas.zip",
-            mime="application/zip"
-        )
+        # Botón para descargar todas las imágenes procesadas
+       import streamlit as st
+from PIL import Image
+import io
+import zipfile
+
+# Ejemplo de imagen individual creada (una imagen roja 100x100)
+img = Image.new('RGB', (100, 100), color='red')
+
+# Input para nombre del archivo individual
+file_name = st.text_input("Nombre del archivo individual", value="imagen.jpg")
+
+if file_name:
+    # Convertir imagen individual a JPG bytes con calidad máxima
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='JPEG', quality=100)
+    img_bytes.seek(0)
+
+    # Botón para descargar imagen individual
+    st.download_button(
+        label="Guardar imagen individual",
+        data=img_bytes,
+        file_name=file_name,
+        mime="image/jpeg"
+    )
+
+# Ejemplo: Lista de imágenes procesadas (aquí con la misma imagen repetida para ejemplo)
+# En la práctica deberías llenar esta lista con tus imágenes procesadas reales,
+# donde cada elemento es (bytes_de_imagen, nombre_archivo)
+imagenes_procesadas = []
+
+# Aquí convierto la imagen roja a bytes en JPG para usar en la lista de ejemplo
+img_buffer = io.BytesIO()
+img.save(img_buffer, format='JPEG', quality=100)
+img_buffer.seek(0)
+imagenes_procesadas.append((img_buffer.getvalue(), "ejemplo1.jpg"))
+imagenes_procesadas.append((img_buffer.getvalue(), "ejemplo2.jpg"))
+
+# Botón para descargar todas las imágenes procesadas en un ZIP
+if imagenes_procesadas:
+    zip_buffer = io.BytesIO()
+    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+        for img_data, img_name in imagenes_procesadas:
+            zip_file.writestr(img_name, img_data)
+    zip_buffer.seek(0)
+    st.download_button(
+        label="Descargar todas las imágenes procesadas",
+        data=zip_buffer,
+        file_name="imagenes_procesadas.zip",
+        mime="application/zip"
+    )
 
 
     # Destino del anuncio
