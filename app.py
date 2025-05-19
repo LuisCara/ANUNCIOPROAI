@@ -791,7 +791,7 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.  
         **No superes bajo ningún concepto el número de caracteres máximo indicado para el destino.**  
         Si el texto generado supera el límite, reduce o sintetiza sin perder el impacto ni la claridad, y no añadas información irrelevante.  
-        Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales y bien estructurado en parrafos.
+        Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales y bien estructurado dividido en párrafos, sin faltas de ortografía.
 """
 
         response = client.chat.completions.create(
