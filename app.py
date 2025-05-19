@@ -789,7 +789,7 @@ elif menu == textos[lang]["nav"][1]:
         📣 Destino del anuncio: {datos['destino']}  
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
-        Muy importante no exceder la longitud maxima de 850 caracteres incluidos espacios en blanco para portales inmobiliarios y 600 caracteres para redes sociales incluyendo los espacios en blanco entre palabras, no los superes.
+        Muy importante no excedas la longitud maxima de 850 caracteres incluidos espacios en blanco para portales inmobiliarios y 600 caracteres para redes sociales incluyendo los espacios en blanco entre palabras, no los superes.
         El anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
         del destino seleccionado, si es para portales inmobiliarios o redes sociales.
         """
