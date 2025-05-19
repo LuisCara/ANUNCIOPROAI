@@ -763,8 +763,8 @@ elif menu == textos[lang]["nav"][1]:
         - Ser atractivo, claro, natural y persuasivo.
         - Destacar los beneficios y el estilo de vida que ofrece la propiedad.
         - Adaptarse al canal:
-          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras.
-          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags.
+          - Si el destino es "portales inmobiliarios", escribe con estilo profesional y estructurado, orientado a SEO y con llamadas a la acción claras. Longitud maxima de 850 caracteres incluidos espacios en blanco.
+          - Si el destino es "redes sociales", usa un estilo más directo, emocional, con emojis (donde encajen), y termina el anuncio con hashtags relevantes según el país o ciudad, y no incluyas informacion despues de los hastags. Longitud maxima de 600 caracteres incluyendo los espacios en blanco.
 
         Utiliza la información facilitada para redactar el texto sin repetir datos de forma robótica. No enumeres todo como una lista. Transforma los datos en frases que comuniquen valor real.
 
@@ -789,7 +789,6 @@ elif menu == textos[lang]["nav"][1]:
         📣 Destino del anuncio: {datos['destino']}  
 
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.
-        Muy importante no excedas la longitud maxima de 850 caracteres incluidos espacios en blanco si el anuncio es  para portales inmobiliarios y 600 caracteres si el anuncio es para redes sociales incluyendo los espacios en blanco entre palabras.
         El anuncio tiene que estar bien estructurado en parrafos y sin errores ortográficos y gramaticales, el formato ideal depende 
         del destino seleccionado, si es para portales inmobiliarios o redes sociales.
         """
