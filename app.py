@@ -771,7 +771,7 @@ elif menu == textos[lang]["nav"][1]:
     Tipo de propiedad: {tipo}  
     Ubicación: {ubicacion}  
     Superficie construida: {m2} m² ({m2_utiles} m² útiles) sobre un terreno de {m2_terreno} m²  
-    Habitaciones: {habitaciones} | Baños: {banos}  
+    Habitaciones: {habitaciones} | Baños: {baños}  
     Fachada: {fachada} | Orientación: {orientacion}  
     Estado actual: {estado} | Certificado energético: {certificado}  
     Suelo interior: {suelo_interior} | Suelo exterior: {suelo_exterior}  
