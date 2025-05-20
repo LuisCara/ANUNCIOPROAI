@@ -800,14 +800,14 @@ elif menu == textos[lang]["nav"][1]:
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
-            max_tokens=1000
+            max_tokens=350
         )
 
         return response.choices[0].message.content
 
 # Botón para generar el anuncio
 
-st.subheader("🧠 Generador de anuncio con IA")
+    st.subheader("🧠 Generador de anuncio con IA")
 if st.button("✨ Generar anuncio optimizado"):
     datos = recopilar_datos(destino)
     anuncio = generar_anuncio(datos)
