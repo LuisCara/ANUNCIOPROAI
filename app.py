@@ -753,7 +753,9 @@ elif menu == textos[lang]["nav"][1]:
         prompt = f"""
         Eres un experto en marketing inmobiliario internacional, especializado en crear anuncios profesionales y persuasivos para la venta o alquiler de propiedades en distintos países y plataformas.
 
-        Tu objetivo es generar un anuncio de alto impacto, optimizado para:
+        Tu objetivo es generar un anuncio de alto impacto, optimizado para el idioma "{idioma_seleccionado}" ({lang}) y el canal indicado:
+
+Tu objetivo es generar un anuncio de alto impacto, optimizado para:
 
         1. **Portales inmobiliarios** como Idealista, Fotocasa, Milanuncios, Zillow, Immowelt, SeLoger, Rightmove…
         2. **Redes sociales** como Instagram, Facebook, TikTok o LinkedIn.
@@ -791,7 +793,9 @@ elif menu == textos[lang]["nav"][1]:
         🎯 Recuerda: escribe como si fueras un copywriter de alto nivel. Seduce, informa y convence.  
         **No superes bajo ningún concepto el número de caracteres máximo indicado para el destino.**  
         Si el texto generado supera el límite, reduce o sintetiza sin perder el impacto ni la claridad, y no añadas información irrelevante.  
-        Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales y bien estructurado dividido en párrafos, sin faltas de ortografía.
+        Redacta el anuncio final directamente en idioma "{idioma_seleccionado}" ({lang}). No incluyas texto en otros idiomas.
+
+Devuelve solo el texto del anuncio, sin explicaciones ni instrucciones adicionales y bien estructurado dividido en párrafos, sin faltas de ortografía.
 """
 
         response = client.chat.completions.create(
@@ -805,23 +809,23 @@ elif menu == textos[lang]["nav"][1]:
 
         return response.choices[0].message.content
 
-# Botón para generar el anuncio
 
     st.subheader("🧠 Generador de anuncio con IA")
-if st.button("✨ Generar anuncio optimizado"):
-    datos = recopilar_datos(destino)
-    anuncio = generar_anuncio(datos)
-    st.success("✅ Anuncio generado con éxito:")
-    st.markdown("📝 **Anuncio generado**")
-    st.markdown(anuncio)
+    if st.button("✨ Generar anuncio optimizado"):
+        datos = recopilar_datos(destino)
+        anuncio = generar_anuncio(datos)
+        st.success("✅ Anuncio generado con éxito:")
+        st.markdown("📝 **Anuncio generado**")
+        st.markdown(anuncio)
 
-    # Botón para descargar anuncio
-    st.download_button(
-        label="📥 Descargar anuncio",
-        data=anuncio,
-        file_name="anuncio_inmobiliario.txt",
-        mime="text/plain"
-    )
+        # Botón para descargar anuncio
+        st.download_button(
+            label="📥 Descargar anuncio",
+            data=anuncio,
+            file_name="anuncio_inmobiliario.txt",
+            mime="text/plain"
+        )
+        
   
 # Planes
 elif menu == textos[lang]["nav"][2]:
@@ -898,4 +902,3 @@ def contacto_page(lang, textos):
 # Mostrar la página de contacto
 if menu == textos[lang]["nav"][3]:
     contacto_page(lang, textos)
-
