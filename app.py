@@ -832,11 +832,11 @@ elif menu == textos[lang]["nav"][2]:
     st.header(textos[lang]["planes_titulo"])
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.subheader("🎁 Gratis")
-        st.write("- Hasta 5 anuncios/mes")
+        st.subheader("🎁 Particular")
+        st.write("- Hasta 2 anuncios")
         st.write("- 1 idioma")
         st.write("- Soporte básico")
-        st.write("💸 Gratis primeros 5 anuncios")
+        st.write("💸 Gratis primeros 2 anuncios")
     with col2:
         st.subheader("💼 Profesional")
         st.write("- Hasta 50 anuncios/mes")
@@ -845,11 +845,11 @@ elif menu == textos[lang]["nav"][2]:
         st.write("💳 14,90 €/mes")
     with col3:
         st.subheader("🏢 Agencia")
-        st.write("- Anuncios ilimitados")
+        st.write("- Hasta 200 anuncios/mes")
         st.write("- Hasta 5 idiomas")
         st.write("- IA personalizada")
-        st.write("📞 Contactar")
-        
+        st.write("💰 29,90 €/mes")
+            
 # Contacto
 
 # Cargar variables de entorno
