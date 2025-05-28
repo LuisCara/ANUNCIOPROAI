@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pillow = "*"
+streamlit = "*"
+streamlit-option-menu = "*"
+requests = "*"
+pyopenssl = "*"
+sendgrid = "*"
+python-dotenv = "*"
+certifi = "*"
+openai = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"

@@ -1,16 +1,29 @@
 
 # 🏠 AnuncioProAI
 
-**AnuncioProAI** es una aplicación web desarrollada en Python con Streamlit que permite a profesionales del sector inmobiliario generar anuncios optimizados para portales y redes sociales usando inteligencia artificial.
+**AnuncioProAI** es una aplicación web desarrollada en Python con Streamlit que permite a particulares, profesionales y agencias inmobiliarias generar anuncios optimizados para portales y redes sociales usando inteligencia artificial. También mejora imágenes, analiza fotos y adapta los anuncios en varios idiomas.
+
+---
 
 ## 🚀 Funcionalidades destacadas
 
-- ✨ Generación de anuncios persuasivos con GPT-4.
-- 🌐 Traducción y localización en 5 idiomas.
-- 📸 Mejora automática de imágenes con PIL y Cloudinary.
+- ✨ Generación automática de textos persuasivos con IA (GPT-4).
+- 🌐 Traducción y localización en 5 idiomas (es, en, fr, it, de).
+- 📸 Mejora de imágenes con filtros personalizables y Cloudinary.
 - 🧠 Análisis de imágenes con GPT-4 Vision.
-- 💌 Formulario de contacto con envío de correos mediante SendGrid.
-- 📤 Descarga de imágenes procesadas (individuales o en ZIP).
+- 📤 Descarga de imágenes procesadas individualmente o en ZIP.
+- 📄 Generación de anuncios adaptados a portales inmobiliarios o redes sociales.
+- 💌 Formulario de contacto con envío automático de correos mediante SendGrid.
+
+---
+
+## 💰 Planes de uso
+
+| Plan              | Precio       | Incluye                                                                 |
+|-------------------|--------------|--------------------------------------------------------------------------|
+| 🎁 **Gratis**       | 0 € (prueba) | ✅ Hasta 2 anuncios de prueba  <br> ✅ 1 idioma  <br> ✅ Soporte básico por email |
+| 💼 **Profesional** | 14,90 €/mes  | ✅ Hasta 50 anuncios/mes  <br> ✅ Hasta 3 idiomas <br> ✅ Soporte prioritario <br> ✅ Generador de imágenes y textos IA |
+| 🏢 **Agencia**      | 30 €/mes     | ✅ Hasta 200 anuncios/mes  <br> ✅ Hasta 5 idiomas <br> ✅ Branding personalizado <br> ✅ Soporte premium <br> ✅ Subida masiva (opcional) |
 
 ---
 
@@ -46,24 +59,14 @@ git clone https://github.com/tuusuario/anuncioproai.git
 cd anuncioproai
 ```
 
-### 2. Crea un entorno virtual (opcional pero recomendado)
+### 2. Crea y activa un entorno virtual (opcional pero recomendado)
 
 ```bash
 python -m venv venv
+source venv/bin/activate  # o venv\Scripts\activate en Windows
 ```
 
-### 3. Activa el entorno virtual
-
-- En Windows:
-  ```bash
-  venv\Scripts\activate
-  ```
-- En macOS/Linux:
-  ```bash
-  source venv/bin/activate
-  ```
-
-### 4. Instala las dependencias
+### 3. Instala las dependencias
 
 ```bash
 pip install -r requirements.txt
@@ -90,24 +93,12 @@ SENDGRID_FROM_EMAIL=tu_email_verificado_en_sendgrid
 
 ## ▶️ Ejecutar la aplicación
 
-Una vez configurado todo, ejecuta:
-
 ```bash
-streamlit run app4.py
+streamlit run app.py
 ```
 
-La app se abrirá automáticamente en tu navegador en `http://localhost:8501`.
-
----
-
-## 🛠️ Personalización
-
-Puedes adaptar los textos, idiomas o funcionalidad modificando el archivo `app4.py`. Está bien estructurado y documentado por secciones:
-
-- Inicio
-- Generador de anuncios
-- Planes
-- Contacto
+La app se abrirá automáticamente en tu navegador:  
+🌐 `http://localhost:8501`
 
 ---
 
@@ -115,10 +106,10 @@ Puedes adaptar los textos, idiomas o funcionalidad modificando el archivo `app4.
 
 Desarrollado por **Luis Cara Galafat**  
 📧 [luis.cara@hotmail.com](mailto:luis.cara@hotmail.com)  
-🌐 Proyecto personal y educativo basado en IA generativa.
+🌐 Proyecto personal y educativo basado en inteligencia artificial generativa.
 
 ---
 
 ## 🧠 Licencia
 
-Este proyecto se utiliza con fines educativos, experimentales y profesionales. No puedes adaptarlo a tus necesidades comerciales bajo tu responsabilidad.
+Este proyecto tiene fines educativos y profesionales. Su uso comercial queda bajo responsabilidad del usuario.
