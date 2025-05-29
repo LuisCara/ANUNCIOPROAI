@@ -7,4 +7,3 @@ cloudinary
 requests
 zipfile36
 certifi
-cloudinary
