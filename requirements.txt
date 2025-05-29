@@ -7,4 +7,3 @@ cloudinary
 requests
 zipfile36
 certifi
-#cambio para forzar actualizacion en streamlit
